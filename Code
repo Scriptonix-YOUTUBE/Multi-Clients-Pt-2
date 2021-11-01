@@ -1,0 +1,207 @@
+
+
+
+
+local gui = Instance.new("ScreenGui")
+local Frame = Instance.new("Frame")
+local UICorner = Instance.new("UICorner")
+local TextBox = Instance.new("TextBox")
+local UICorner_2 = Instance.new("UICorner")
+local TextButton = Instance.new("TextButton")
+local UICorner_3 = Instance.new("UICorner")
+local TextBox_2 = Instance.new("TextBox")
+local UICorner_4 = Instance.new("UICorner")
+
+local follow = {nil,nil}
+
+local lookat = false
+
+local function doe(p,a)
+	local bo = Instance.new('AlignOrientation',p)
+	local at = Instance.new('Attachment',p)
+	local att = Instance.new('Attachment',a)
+	bo.Name = "bob"
+	at.Name = "bob"
+	att.Name = "bob"
+	bo.Responsiveness = 200
+	bo.MaxTorque = 1000
+	bo.Attachment0 = att
+	bo.Attachment1 = at
+end
+
+local function clear(p)
+	for _, v in pairs(p:GetChildren()) do
+		if v.Name == "bob" then
+			v:Destroy()
+		end
+	end
+end
+
+
+local function cframe(p,cf)
+	local v = p.Velocity
+	local r = p.RotVelocity
+	local o = Instance.new('Part',workspace)
+	local b = Instance.new('BindableEvent')
+	p.CanCollide = false
+	o.Size = Vector3.new(0,0,0)
+	o.Transparency = 1
+	o.CanCollide = false
+	o.Anchored = true
+	o.CFrame = cf
+	doe(o,p)
+	d = o.Touched:Connect(function(e)
+		if e == p then
+			d:Disconnect()
+			b:Fire()
+		end
+	end)
+	b.Event:Wait()
+	o:Destroy()
+	clear(p)
+	p.Velocity = v
+	p.RotVelocity = r
+	p.CanCollide = true
+end
+
+local function chat(message)
+
+
+	local function thing(s)
+		for _, v in pairs(s:GetChildren()) do
+			if v:IsA("ScreenGui") and v:FindFirstChild("Frame") and v:FindFirstChild("Frame"):FindFirstChild("ChatBarParentFrame") then
+				return v
+			end
+		end
+	end
+
+	local player = game.Players.LocalPlayer
+	local c = thing(player.PlayerGui)
+	local bar = c.Frame.ChatBarParentFrame.Frame.BoxFrame.Frame.ChatBar
+	local text = bar.Text
+	bar:CaptureFocus()
+	bar.Text = message
+	bar:ReleaseFocus(true)
+	bar:CaptureFocus()
+	bar.Text = text
+	bar:ReleaseFocus()
+end
+
+local function jump()
+	game.Players.LocalPlayer.Character:FindFirstChild'Humanoid'.Jump = true
+end
+
+local function lookatslowly(p)
+	cframe(game.Players.LocalPlayer.Character:FindFirstChild'HumanoidRootPart',CFrame.lookAt(game.Players.LocalPlayer.Character:FindFirstChild'HumanoidRootPart'.Position,p.Character:FindFirstChild'HumanoidRootPart'.Position))
+end
+
+local function kill()
+	game.Players.LocalPlayer.Character:BreakJoints()
+end
+
+local function disconnect()
+	game:Shutdown()
+end
+
+local function teleport(p)
+	local po = (p.Character:FindFirstChild'HumanoidRootPart'.CFrame*CFrame.new(0,0,follow[2]*2)).p
+	game.Players.LocalPlayer.Character:FindFirstChild'HumanoidRootPart'.Position = po
+end
+
+game:GetService'RunService'.RenderStepped:Connect(function()
+	if follow[1] then
+		game.Players.LocalPlayer.Character:FindFirstChild'Humanoid':MoveTo((follow[1].Character:FindFirstChild'HumanoidRootPart'.CFrame*CFrame.new(0,0,follow[2]*2)).p)
+	end
+	if lookat then
+		cframe(game.Players.LocalPlayer.Character:FindFirstChild'HumanoidRootPart',CFrame.lookAt(game.Players.LocalPlayer.Character:FindFirstChild'HumanoidRootPart'.Position,follow[1].Character:FindFirstChild'HumanoidRootPart'.Position))
+	end
+end)
+
+
+gui.Name = "gui"
+gui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+gui.ResetOnSpawn = false
+
+Frame.Parent = gui
+Frame.BackgroundColor3 = Color3.fromRGB(65, 65, 65)
+Frame.Position = UDim2.new(0.39825809, 0, 0.429268271, 0)
+Frame.Size = UDim2.new(0, 257, 0, 162)
+
+UICorner.CornerRadius = UDim.new(0, 20)
+UICorner.Parent = Frame
+
+TextBox.Parent = Frame
+TextBox.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+TextBox.Position = UDim2.new(0.108949415, 0, 0.154320985, 0)
+TextBox.Size = UDim2.new(0, 200, 0, 25)
+TextBox.Font = Enum.Font.SourceSans
+TextBox.PlaceholderText = "Username"
+TextBox.Text = ""
+TextBox.TextColor3 = Color3.fromRGB(0, 0, 0)
+TextBox.TextScaled = true
+TextBox.TextSize = 14.000
+TextBox.TextWrapped = true
+
+UICorner_2.Parent = TextBox
+
+TextButton.Parent = Frame
+TextButton.BackgroundColor3 = Color3.fromRGB(0, 255, 21)
+TextButton.Position = UDim2.new(0.108949415, 0, 0.54320991, 0)
+TextButton.Size = UDim2.new(0, 200, 0, 50)
+TextButton.Font = Enum.Font.Ubuntu
+TextButton.Text = "Bot"
+TextButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+TextButton.TextScaled = true
+TextButton.TextSize = 14.000
+TextButton.TextWrapped = true
+
+UICorner_3.Parent = TextButton
+
+TextBox_2.Parent = Frame
+TextBox_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+TextBox_2.Position = UDim2.new(0.108949415, 0, 0.30864197, 0)
+TextBox_2.Size = UDim2.new(0, 200, 0, 25)
+TextBox_2.Font = Enum.Font.SourceSans
+TextBox_2.PlaceholderText = "Client Number"
+TextBox_2.Text = ""
+TextBox_2.TextColor3 = Color3.fromRGB(0, 0, 0)
+TextBox_2.TextScaled = true
+TextBox_2.TextSize = 14.000
+TextBox_2.TextWrapped = true
+
+UICorner_4.Parent = TextBox_2
+
+TextButton.MouseButton1Click:Connect(function()
+	local p = game.Players:FindFirstChild(TextBox.Text)
+	local n = tonumber(TextBox_2.Text)
+	if p and n then
+		follow = {nil,n}
+		chat('/e n' .. TextBox.Text)
+		gui:Destroy()
+		p.Chatted:Connect(function(msg)
+			if msg == '/e cjump' then
+				jump()
+			elseif msg == '/e cfollow' then
+				if not follow[1] then
+					follow = {p,n}
+				else
+					follow = {p,nil}
+				end
+			elseif msg == '/e clookatslowly' then
+				lookatslowly(p)
+			elseif msg == '/e ckill' then
+				kill()
+			elseif msg == '/e cdisconnect' then
+				disconnect()
+			elseif msg == '/e cteleport' then
+				teleport(p)
+			elseif string.find(msg,'/e cchat') then
+				chat(string.split(msg,'/e cchat')[2])
+			elseif msg == '/e clookat' then
+				follow = {p,nil}
+				lookat = true
+			end
+		end)
+	end
+end)
