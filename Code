@@ -23,7 +23,7 @@ local function doe(p,a)
 	bo.Name = "bob"
 	at.Name = "bob"
 	att.Name = "bob"
-	bo.Responsiveness = 10000
+	bo.Responsiveness = 100000
 	bo.MaxTorque = 1000
 	bo.Attachment0 = att
 	bo.Attachment1 = at
@@ -104,8 +104,8 @@ local function disconnect()
 end
 
 local function teleport(p)
-	local po = p.Character:FindFirstChild'HumanoidRootPart'.CFrame*CFrame.new(0,0,follow[2]*2)
-	cframe(game.Players.LocalPlayer.Character:FindFirstChild'HumanoidRootPart',po)
+	local po = p.Character:FindFirstChild'HumanoidRootPart'.CFrame*CFrame.new(0,2,follow[2]*2)
+	game.Players.LocalPlayer.Character:FindFirstChild'HumanoidRootPart'.Position = po
 end
 
 game:GetService'RunService'.RenderStepped:Connect(function()
@@ -186,7 +186,7 @@ TextButton.MouseButton1Click:Connect(function()
 				if not follow[1] then
 					follow = {p,n}
 				else
-					follow = {p,nil}
+					follow = {nil,n}
 				end
 			elseif msg == '/e clookatslowly' then
 				lookatslowly(p)
