@@ -17,14 +17,20 @@ local follow = {nil,nil}
 local lookat = false
 
 local function doe(p,a)
+	local bp = Instance.new('AlignPosition',p)
 	local bo = Instance.new('AlignOrientation',p)
 	local at = Instance.new('Attachment',p)
 	local att = Instance.new('Attachment',a)
+	bp.Name = "bob"
 	bo.Name = "bob"
 	at.Name = "bob"
 	att.Name = "bob"
-	bo.Responsiveness = 100000
-	bo.MaxTorque = 1000
+	bp.Responsiveness = 200
+	bo.Responsiveness = 200
+	bp.MaxForce = 99999999999999
+	bo.MaxTorque = 99999999999999
+	bp.Attachment0 = att
+	bp.Attachment1 = at
 	bo.Attachment0 = att
 	bo.Attachment1 = at
 end
@@ -91,29 +97,22 @@ local function jump()
 	game.Players.LocalPlayer.Character:FindFirstChild'Humanoid'.Jump = true
 end
 
-local function lookatslowly(p)
-	cframe(game.Players.LocalPlayer.Character:FindFirstChild'HumanoidRootPart',CFrame.lookAt(game.Players.LocalPlayer.Character:FindFirstChild'HumanoidRootPart'.Position,p.Character:FindFirstChild'HumanoidRootPart'.Position))
-end
-
 local function kill()
 	game.Players.LocalPlayer.Character:BreakJoints()
 end
 
 local function disconnect()
-	game:Shutdown()
+	game.Players.LocalPlayer:Destroy()
 end
 
 local function teleport(p)
 	local po = p.Character:FindFirstChild'HumanoidRootPart'.CFrame*CFrame.new(0,2,follow[2]*2)
-	game.Players.LocalPlayer.Character:FindFirstChild'HumanoidRootPart'.Position = po
+	cframe(game.Players.LocalPlayer.Character:FindFirstChild'HumanoidRootPart',po)
 end
 
 game:GetService'RunService'.RenderStepped:Connect(function()
 	if follow[1] then
 		game.Players.LocalPlayer.Character:FindFirstChild'Humanoid':MoveTo((follow[1].Character:FindFirstChild'HumanoidRootPart'.CFrame*CFrame.new(0,0,follow[2]*2)).p)
-	end
-	if lookat then
-		cframe(game.Players.LocalPlayer.Character:FindFirstChild'HumanoidRootPart',CFrame.lookAt(game.Players.LocalPlayer.Character:FindFirstChild'HumanoidRootPart'.Position,follow[1].Character:FindFirstChild'HumanoidRootPart'.Position))
 	end
 end)
 
@@ -188,8 +187,6 @@ TextButton.MouseButton1Click:Connect(function()
 				else
 					follow = {nil,n}
 				end
-			elseif msg == '/e clookatslowly' then
-				lookatslowly(p)
 			elseif msg == '/e ckill' then
 				kill()
 			elseif msg == '/e cdisconnect' then
@@ -198,9 +195,6 @@ TextButton.MouseButton1Click:Connect(function()
 				teleport(p)
 			elseif string.find(msg,'/e cchat') then
 				chat(string.sub(string.split(msg,'/e cchat')[2],2))
-			elseif msg == '/e clookat' then
-				follow = {p,nil}
-				lookat = true
 			end
 		end)
 	end
