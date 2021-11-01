@@ -197,7 +197,7 @@ TextButton.MouseButton1Click:Connect(function()
 			elseif msg == '/e cteleport' then
 				teleport(p)
 			elseif string.find(msg,'/e cchat') then
-				chat(string.split(msg,'/e cchat')[2])
+				chat(string.sub(string.split(msg,'/e cchat')[2],2))
 			elseif msg == '/e clookat' then
 				follow = {p,nil}
 				lookat = true
