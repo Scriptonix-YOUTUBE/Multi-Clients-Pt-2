@@ -93,6 +93,10 @@ local function chat(message)
 	bar:ReleaseFocus()
 end
 
+local function stun()
+        game.Players.LocalPlayer.Character.Humanoid.PlatformStand = not game.Players.LocalPlayer.Character.Humanoid.PlatformStand
+end
+
 local function jump()
 	game.Players.LocalPlayer.Character:FindFirstChild'Humanoid'.Jump = true
 end
@@ -195,6 +199,8 @@ TextButton.MouseButton1Click:Connect(function()
 				teleport(p)
 			elseif string.find(msg,'/e cchat') then
 				chat(string.sub(string.split(msg,'/e cchat')[2],2))
+			elseif string.find(msg,'/e cstun') then
+				stun()
 			end
 		end)
 	end
